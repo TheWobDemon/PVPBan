@@ -1,2 +1,2 @@
 # PVPBan
-PVPban - Skript Minecragt
+PVPban - Skript Minecraft
