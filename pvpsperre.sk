@@ -1,0 +1,93 @@
+
+
+options:
+	Server: DeinServer.de
+	Prefix: &7PvP-&cSperre
+
+	Version: 1.1
+	Author: FruitHaze
+
+
+
+
+
+
+
+command /sperren [<offlineplayer>] [<text>]:
+	permission: sperren.use
+	permission message: {@Prefix} &7Dafür haben sie keine &cPermission
+	trigger:
+		if arg 1 is not set:
+			if arg 2 is not set:
+				send "{@Prefix} &7| &a/sperren &7<Spieler> <Grund>"
+				stop
+		if arg 1 is set:
+			if arg 2 is set:
+				if arg 2 is not "delete":
+					if {pvp.sperre.%uuid of arg-1%} is not set:
+						set {pvp.sperre.%uuid of arg-1%} to true
+						set {pvp.sperre.grund.%uuid of arg-1%} to arg-2
+						set {pvp.sperre.user.%uuid of arg-1%} to player
+						add arg 1 to {pvpsperreliste::*}
+						send "{@Prefix} &7Sie haben &c%arg-1% &cgesperrt &7Grund&8: &b%arg-2%"
+						stop
+					else:
+						send "{@Prefix} &7Der Spieler &6%arg-1% &7ist bereits &cgesperrt"
+						stop
+		if arg 1 is set:
+			if arg 2 is "delete":
+				if {pvp.sperre.%uuid of arg-1%} is set:
+					delete {pvp.sperre.%uuid of arg-1%}
+					delete {pvp.sperre.grund.%uuid of arg-1%}
+					delete {pvp.sperre.user.%uuid of arg-1%}
+					remove arg 1 from {pvpsperreliste::*}
+					send "{@Prefix} &7Der Spieler &a%arg-1% &7kann wieder Spielen"
+					stop
+				else:
+					send "{@Prefix} &7Der Spieler &c%arg-1% &7ist nicht &cgesperrt"
+					stop
+
+
+command /pvpsliste:
+	permission: sperren.use
+	trigger:
+		if {pvpsperreliste::*} is set:
+			send "{@Prefix} &7PvP-&cSperre &eListe"
+			send ""
+			loop {pvpsperreliste::*}:
+				send "&b➤ &6Spieler[&b%loop-value%&6] &7Grund[&b%{pvp.sperre.grund.%uuid of loop-value%}%&7] &6Gesperrt von &a%{pvp.sperre.user.%uuid of loop-value%}%"
+				stop
+		else:
+			send "{@Prefix} &7Es wurden keine Spieler &cgesperrt"
+			stop
+
+on damage:
+	if victim is a player:
+		if attacker is a player:
+			if {pvp.sperre.%attacker%} is set:
+				cancel event
+				send "&7- {@Prefix} &7-"
+				send "{@Server} &7Sie haben eine &bPvP&7-&4Sperre"
+				send "{@Server} &6Grund&8: &e%{pvp.sperre.grund.%attacker%}%"
+
+
+on join:
+	if {pvp.sperre.%uuid of player%} is set:
+		set join message to ""
+		send "&l&m&c-------------------------------------------------"
+		send "   {@Prefix} | {@Server}"
+		send ""
+		send "{@Prefix} &7Sie haben eine PvP-Sperre"
+		send "{@Prefix} &7Sie können derzeit keine PvP Modis Betreten"
+		send ""
+		send "   {@Prefix} | {@Server}"
+		send "&l&m&c-------------------------------------------------"
+		stop
+
+
+
+on load:
+	send "{@Prefix} &7PvP-&cSperre &bby &cFruit&aHaze" to console
+	send "&7- &cVersion: &e1.1" to console
+	broadcast "&7PvP-&cSperre &bSkript by &aFruitHaze"
+	stop
