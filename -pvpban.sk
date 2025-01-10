@@ -1,0 +1,265 @@
+# Permission die Wichtig sind!
+#
+# PvPBan, pvpban.*
+# PvPBan Notify, pvpban.notify
+# Sperren, pvpban.*
+# Owner/Teamleitung Sperr Rechte, anti.sperrung
+# Setpvpspawn, pvpban.owner
+# Banlist und PvPUnban, pvpban.*.*
+
+on any movement:
+	if player is in world "world":
+# Weltnamen    	 	   	^^^^^^^^^
+		if y-coordinate of player is smaller than 180:
+# höhe 											  ^^^
+			if {Banned2.%player%} is set:
+				teleport player to {spawnpvp}
+				send "§8» §4§l⚒ §8┃ §7Du bist derzeit §cPvP §7gebannt§8."
+				send "§8» §4§l⚒ §8┃ §7Grund§8: §c%{Banned2.%player%}%"
+				send "§8» §4§l⚒ §8┃ §7Dauer§8: §a%{Ban1.%player%.Time.Day}% §7Tage§8(§7e§8) §a%{Ban1.%player%.Time.Std}% §7Stunde§8(§7n§8) §a%{Ban1.%player%.Time.Min}% §7Minute§8(§7n§8)"
+			
+command /version [<text>]:
+	trigger:
+		if arg-1 is "1" or "2":
+			if arg-1 is "1":
+				send "§8» §4§l⚒ §8┃ §7PvPBan system | Verbessert durch DemonischeEnte"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Version 2.0"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Commands:"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7/PvPBan (Name) (Zeit D/H/M/S) (Grund)"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7PvP bannt ein Spieler aus dem PvP!"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7/PvPUnban (Name)"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Entsperrt ein Spieler wieder damit er PVP machen kann"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Seite zwei -> /version 2"
+				send "§8» §4§l⚒ §8┃ §7"
+			if arg-1 is "2":
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7/PvPbanlist"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Dort werden alle Gebannten Spieler angezeigt"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7/Setpvpspawn"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Mit dem Command wird der PVP Spawn Point gesetzt falls jemand versucht PVP zu machen"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7/Sperren (Name) (Sperren / Entsperren)"
+				send "§8» §4§l⚒ §8┃ §7"
+				send "§8» §4§l⚒ §8┃ §7Sperrt/Entsperrt ein Teammitglied von PvPBan System"
+				send "§8» §4§l⚒ §8┃ §7Kann nicht von Gesperrten Teammitgliedern genutzt werden"
+				send "§8» §4§l⚒ §8┃ §7"
+		else:
+			send "§8» §4§l⚒ §8┃ §7Benutze bitte /Version 1/2"
+			
+command /sperren [<arg-1>] [<text>]:
+	trigger:
+		if command sender have permission "pvpban.*":
+			if {pvpsperrung.%arg-1%} is false:
+				if arg-1 is set:
+					if arg-2 is "sperren":
+						if arg-1 has permission "anti.sperrung":
+							set {_Kicked2} to player
+							set {pvpsperrung.%arg-1%} to true
+							send "§8» §4§l⚒ §8┃ §7Du hast %arg-1% §4verboten §7PvP banns zu machen§8."
+							wait 25 ticks
+							loop all players:
+								loop-player has the permission "pvpban.notify":
+									send "" to loop-player
+									send "§8» §4§l⚒ §8┃ §7Das Teammitglied §a%argument 1% §7Kann das §4PvP Bann-System §7nicht mehr nutzen§8." to loop-player
+									send "§8» §4§l⚒ §8┃ §7Von§8: §c%{_Kicked2}%" to loop-player
+									send "" to loop-player
+						else:
+							message "§8» §4§l⚒ §8┃ §cDu kannst das Teammitglied nicht sperren!"
+					if arg-2 is "entsperren"
+						set {pvpsperrung.%arg-1%} to false
+						send "§8» §4§l⚒ §8┃ §7Du hast %arg-1% wieder §aerlaubt §7PvP banns zu machen§8."
+						stop
+				else:
+					send "§8» §4§l⚒ §8┃ §7Commands"
+					send "§8» §4§l⚒ §8┃ §7"
+					send "§8» §4§l⚒ §8┃ §7/Sperren (Name) (Sperren/Entsperren)"
+					send "§8» §4§l⚒ §8┃ §7"
+					send "§8» §4§l⚒ §8┃ §7Information"
+					send "§8» §4§l⚒ §8┃ §7"
+					send "§8» §4§l⚒ §8┃ §7Gesperrte Nutze können sich und andere nicht Sperren / Entsperren"
+			else:
+				send "§8» §4§l⚒ §8┃ §7Du kannst derzeitig keine §cPvP §7banns verteilen§8."
+				send "§8» §4§l⚒ §8┃ §7Melde dich bei der Teamleitung oder dem Owner§8!"
+		else:
+			message "§8» §4§l⚒ §8┃ §cDazu hast du keine Rechte!"
+			
+command /pvpban [<offlineplayer>] [<text>] [<text>]:
+	trigger:
+		if command sender have permission "pvpban.*":
+			if argument 1 is set:
+				if argument 1 has permission "pvpban.*":
+					send "§8» §4§l⚒ §8┃ §7Du kannst diesen §cSpieler §7nicht bannen§8."
+					stop
+				else:
+					set {_time} to "%argument 2%"
+					if {_time} contains "d":
+						replace all "d" with "" in {_time}
+						replace all "h" with "" in {_time}
+						replace all "m" with "" in {_time}
+						replace all "s" with "" in {_time}
+						set {_days} to {_time} parsed as number
+						set {_hours} to 0
+						set {_minutes} to 0
+						set {_seconds} to 0
+					else:
+						if {_time} contains "h":
+							replace all "d" with "" in {_time}
+							replace all "h" with "" in {_time}
+							replace all "m" with "" in {_time}
+							replace all "s" with "" in {_time}
+							set {_days} to 0
+							set {_hours} to {_time} parsed as number
+							set {_minutes} to 0
+							set {_seconds} to 0
+						else:
+							if {_time} contains "m":
+								replace all "d" with "" in {_time}
+								replace all "h" with "" in {_time}
+								replace all "m" with "" in {_time}
+								replace all "s" with "" in {_time}
+								set {_days} to 0
+								set {_hours} to 0
+								set {_minutes} to {_time} parsed as number
+								set {_seconds} to 0
+							else:
+								if {_time} contains "s":
+									replace all "d" with "" in {_time}
+									replace all "h" with "" in {_time}
+									replace all "m" with "" in {_time}
+									replace all "s" with "" in {_time}
+									set {_days} to 0
+									set {_hours} to 0
+									set {_minutes} to 0
+									set {_seconds} to {_time} parsed as number
+					if {_days} is a number:
+						if {_hours} is a number:
+							if {_minutes} is a number:
+								if {_seconds} is a number:
+									if argument 3 is set:
+										if {_days} is smaller than 0:
+											stop
+										if {_days} is bigger than 1000:
+											stop
+										if {_hours} is smaller than 0:
+											stop
+										if {_hours} is bigger than 24:
+											stop
+										if {_minutes} is smaller than 0:
+											stop
+										if {_minutes} is bigger than 60:
+											stop
+										if {_seconds} is smaller than 0:
+											stop
+										if {_seconds} is bigger than 60:
+											stop
+										if {Banned2.%argument 1%} is set:
+											message "§8» §4§l⚒ §8┃ §7Dieser §cSpieler §7wurde schon §aPvP§7 gebannt§8."
+										else:
+											if {pvpsperrung.%sender%} is false:
+												add "%argument 1%" to {PvPBan::*}
+												set {Ban1.%argument 1%.Time.Min} to {_minutes}
+												set {Ban1.%argument 1%.Time.Std} to {_Hours}
+												set {Ban1.%argument 1%.Time.Day} to {_days}
+												set {Ban1.%argument 1%.Time.Sek} to {_seconds}
+												set {Banned2.%argument 1%} to "%uncolored argument 3%"
+												set {_Kicked} to player
+												teleport arg-1 to {spawnpvp}
+												broadcast "&7"
+												broadcast "§8» §4§l⚒ §8┃ §7Der Spieler §a%argument 1% §7wurde §aPvP §7gebannt§8."
+												broadcast "§8» §4§l⚒ §8┃ §7Grund§8: §c%colored argument 3%"
+												broadcast "§8» §4§l⚒ §8┃ §7Dauer§8: §c%{_days}% §7Tage §c%{_hours}% §7Stunden §c%{_minutes}% §7Minuten§8."
+												broadcast "&7"#
+												wait 25 ticks
+												loop all players:
+													loop-player has the permission "pvpban.notify":
+														send "" to loop-player
+														send "§8» §4§l⚒ §8┃ §7Der Spieler §a%argument 1% §7wurde §aPvP §7gebannt§8." to loop-player
+														send "§8» §4§l⚒ §8┃ §7Grund§8: §c%colored argument 3%" to loop-player
+														send "§8» §4§l⚒ §8┃ §7Dauer§8: §c%{_days}% §7Tage §c%{_hours}% §7Stunden §c%{_minutes}% §7Minuten§8." to loop-player
+														send "§8» §4§l⚒ §8┃ §7Von§8: §c%{_Kicked}%" to loop-player
+														send "" to loop-player
+												stop
+											else:
+												send "§8» §4§l⚒ §8┃ §7Du kannst derzeitig keine §cPvP §7banns verteilen§8."
+												send "§8» §4§l⚒ §8┃ §7Melde dich bei der Teamleitung oder dem Owner§8!"
+			else:
+				message "§8» §4§l⚒ §8┃ §c/pvpban §8<§cSpieler§8> §8<§cZeit§8> §8<§cGrund§8>"
+		else:
+			message "§8» §4§l⚒ §8┃ §cDazu hast du keine Rechte!"
+				
+every 1 second:
+	loop {PvPBan::*}:
+		if {Ban1.%loop-value%.Time.Sek} is bigger than 0:
+			remove 1 from {Ban1.%loop-value%.Time.Sek}
+		else:
+			if {Ban1.%loop-value%.Time.Min} is bigger than 0:
+				remove 1 from {Ban1.%loop-value%.Time.Min}
+				add 59 to {Ban1.%loop-value%.Time.Sek}
+			else:
+				if {Ban1.%loop-value%.Time.Std} is bigger than 0:
+					remove 1 from {Ban1.%loop-value%.Time.Std}
+					add 59 to {Ban1.%loop-value%.Time.Min}
+					add 59 to {Ban1.%loop-value%.Time.Sek}
+				else:
+					if {Ban1.%loop-value%.Time.Day} is bigger than 0:
+						remove 1 from {Ban1.%loop-value%.Time.Day}
+						add 23 to {Ban1.%loop-value%.Time.Std}
+						add 59 to {Ban1.%loop-value%.Time.Min}
+						add 59 to {Ban1.%loop-value%.Time.Sek}
+		if {Ban1.%loop-value%.Time.Day} is smaller than 1:
+			if {Ban1.%loop-value%.Time.Std} is smaller than 1:
+				if {Ban1.%loop-value%.Time.Min} is smaller than 1:
+					if {Ban1.%loop-value%.Time.Sek} is smaller than 1:
+						remove "%loop-value%" from {PvPBan::*}
+						clear {Banned2.%loop-value%}
+						broadcast "&7"
+						broadcast "§8» §4§l⚒ §8┃ §7Der Spieler §a%loop-value% §7wurde §aPvP §7entbannt§8."
+						broadcast "§8» §4§l⚒ §8┃ §7Grund§8: §cZeit Abgesessen"
+						broadcast "&7"
+						
+command /pvpunban [<offlineplayer>]:
+	permission: pvpban.*.*
+	permission message: §8» §4§l⚒ §8┃ §7Du hast keine Rechte dazu§8.
+	trigger:
+		if argument 1 is set:
+			remove "%offlineplayer-argument%" from {PvPBan::*}
+			clear {Banned2.%offlineplayer-argument%}
+			set {_Kicked} to player
+			loop all players:
+				if loop-player has the permission "pvpban.*":
+					send "" to loop-player
+					send "§8» §4§l⚒ §8┃ §7Der Spieler §c%offlineplayer-argument% §7wurde §aPvP§7 entbannt§8." to loop-players
+					send "§8» §4§l⚒ §8┃ §7Von§8: §c%{_Kicked}%§8." to loop-players
+					send "" to loop-players
+		else:
+			message "§8» §4§l⚒ §8┃ §a/PvPUnban §8<§cSpieler§8>"
+			
+command /pvpbanlist [<text>]:
+	permission: pvpban.*.*
+	permission message: §8» §4§l⚒ §8┃ §7Du hast keine Rechte dazu§8.
+	trigger:
+		if {PvPBan::*} is set:
+			loop {PvPBan::*}:
+				message "§8» §4§l⚒ §8┃ §c%loop-value% §8( §a%{Ban1.%loop-value%.Time.Day}% §7Tage §a%{Ban1.%loop-value%.Time.Std}%§7 Stunden §a%{Ban1.%loop-value%.Time.Min}%§7 Minuten§8 )"
+		else:
+			message "§8» §4§l⚒ §8┃ §7Im moment wurde kein §cSpieler §7gebannt§8."
+			
+command /setpvpspawn [<text>]:
+	permission: pvpban.owner
+	permission message: §8» §4§l⚒ §8┃ §7Du hast keine Rechte dazu§8.
+	trigger:
+		if arg-1 is not set:
+			set {spawnpvp} to location
+			send "§8» §4§l⚒ §8┃ &7Du hast den &bSpawnpoint &7erfolgreich gesetzt&8."
+			send player title "&a&lERFOLGREICH" with subtitle "&8» &7Du hast den Spawn gesetzt"
+			play "NOTE_PLING" to player	
